@@ -18,6 +18,7 @@ logger = get_logger(__name__)
 T = TypeVar("T")
 
 
+# DATA-100: Initial ETL with MD5 deduplication (2022-02)
 def md5_hash(value: str) -> str:
     """
     Compute MD5 hash of a string.
