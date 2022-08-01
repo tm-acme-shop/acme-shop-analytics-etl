@@ -1,8 +1,14 @@
 """
 Logging module for AcmeShop Analytics ETL.
+
+Provides both legacy and structured logging utilities.
 """
-import logging
+from acme_shop_analytics_etl.logging.structured_logging import (
+    get_logger,
+    configure_logging,
+)
 
 __all__ = [
-    "logging",
+    "get_logger",
+    "configure_logging",
 ]
