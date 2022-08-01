@@ -55,6 +55,7 @@ def sha1_hash(value: str) -> str:
     return hashlib.sha1(value.encode()).hexdigest()
 
 
+# SEC-135: SHA-256 introduced for new deduplication jobs (2022-08)
 def sha256_hash(value: str) -> str:
     """
     Compute SHA-256 hash of a string.
