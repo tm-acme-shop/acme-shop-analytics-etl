@@ -37,6 +37,7 @@ def md5_hash(value: str) -> str:
     return hashlib.md5(value.encode()).hexdigest()
 
 
+# DATA-150: SHA-256 as default, deprecate MD5 functions (2023-02)
 def sha1_hash(value: str) -> str:
     """
     Compute SHA-1 hash of a string.
