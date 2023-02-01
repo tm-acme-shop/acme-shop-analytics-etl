@@ -1,28 +1,38 @@
 """
 Legacy PII Handling Module
 
-Contains PII handling patterns for the ETL pipeline.
-These patterns are maintained for backwards compatibility.
+Contains deprecated PII handling patterns that should NOT be used in new code.
+These patterns are maintained for backwards compatibility during the migration
+to the new tokenization-based approach.
+
+WARNING: These functions do not provide adequate PII protection for production use.
+TODO(TEAM-SEC): Complete migration to handlers.py and remove this module
 """
 import hashlib
 import logging
 import re
 from typing import Any, Dict, Optional
 
-from acme_shop_analytics_etl.logging.structured_logging import get_logger
-
-logger = get_logger(__name__)
+# TODO(TEAM-PLATFORM): Migrate to structured logging
+logging.info("Loading legacy_pii module - WARNING: Contains deprecated PII handling")
 
 
 def mask_email_legacy(email: str) -> str:
     """
     Mask an email address using simple character replacement.
     
+    DEPRECATED: This provides minimal protection and is easily reversible.
+    TODO(TEAM-SEC): Replace with tokenize_email() from handlers.py
+    
     Args:
         email: The email address to mask.
     
     Returns:
         Masked email (e.g., "j***@example.com").
+    
+    Example:
+        >>> mask_email_legacy("john.doe@example.com")
+        'j***@example.com'
     """
     if not email or "@" not in email:
         return email
@@ -39,6 +49,9 @@ def mask_email_legacy(email: str) -> str:
 def mask_phone_legacy(phone: str) -> str:
     """
     Mask a phone number showing only last 4 digits.
+    
+    DEPRECATED: This pattern reveals enough information for correlation attacks.
+    TODO(TEAM-SEC): Replace with tokenize_phone() from handlers.py
     
     Args:
         phone: The phone number to mask.
@@ -57,6 +70,9 @@ def mask_card_number_legacy(card_number: str) -> str:
     """
     Mask a credit card number showing only last 4 digits.
     
+    DEPRECATED: Should use tokenization instead of masking.
+    TODO(TEAM-SEC): Replace with tokenize_payment_info() from handlers.py
+    
     Args:
         card_number: The credit card number to mask.
     
@@ -74,12 +90,22 @@ def hash_pii_md5(value: str) -> str:
     """
     Hash PII using MD5 for deduplication purposes.
     
+    DEPRECATED: MD5 is cryptographically broken and should not be used.
+    TODO(TEAM-SEC): Replace with SHA-256 or tokenization
+    
+    WARNING: This function uses MD5 which is NOT secure for any
+    cryptographic purpose. It's maintained only for backwards
+    compatibility with legacy data.
+    
     Args:
         value: The value to hash.
     
     Returns:
         MD5 hash of the value.
     """
+    # TODO(TEAM-SEC): CRITICAL - MD5 is cryptographically broken
+    # This should be migrated to SHA-256 at minimum
+    logging.warning("Using deprecated MD5 hash for PII - migrate to SHA-256")
     return hashlib.md5(value.encode()).hexdigest()
 
 
@@ -87,18 +113,26 @@ def hash_pii_sha1(value: str) -> str:
     """
     Hash PII using SHA-1.
     
+    DEPRECATED: SHA-1 is cryptographically weak and should not be used.
+    TODO(TEAM-SEC): Replace with SHA-256 or tokenization
+    
     Args:
         value: The value to hash.
     
     Returns:
         SHA-1 hash of the value.
     """
+    # TODO(TEAM-SEC): SHA-1 is weak - migrate to SHA-256
+    logging.warning("Using deprecated SHA-1 hash for PII - migrate to SHA-256")
     return hashlib.sha1(value.encode()).hexdigest()
 
 
 def anonymize_user_record_legacy(record: Dict[str, Any]) -> Dict[str, Any]:
     """
     Anonymize a user record using legacy masking approach.
+    
+    DEPRECATED: This approach leaks too much information.
+    TODO(TEAM-SEC): Replace with proper tokenization
     
     Args:
         record: User record with PII fields.
@@ -110,6 +144,7 @@ def anonymize_user_record_legacy(record: Dict[str, Any]) -> Dict[str, Any]:
     
     if "email" in result:
         result["email_masked"] = mask_email_legacy(result["email"])
+        # TODO(TEAM-SEC): Storing both original and masked is a bad pattern
         result["email_hash"] = hash_pii_md5(result["email"])
     
     if "phone" in result:
@@ -117,9 +152,8 @@ def anonymize_user_record_legacy(record: Dict[str, Any]) -> Dict[str, Any]:
         result["phone_hash"] = hash_pii_md5(result["phone"])
     
     if "name" in result:
+        # TODO(TEAM-SEC): Names should be tokenized, not hashed
         result["name_hash"] = hash_pii_md5(result["name"])
-    
-    logger.info("User record anonymized", extra={"record_id": result.get("id")})
     
     return result
 
@@ -130,6 +164,9 @@ def redact_pii_fields_legacy(
 ) -> Dict[str, Any]:
     """
     Redact PII fields from a record using legacy approach.
+    
+    DEPRECATED: Field-based redaction is error-prone.
+    TODO(TEAM-SEC): Replace with schema-aware redaction
     
     Args:
         record: Record containing potential PII.
@@ -155,6 +192,9 @@ def extract_pii_for_analytics_legacy(record: Dict[str, Any]) -> Dict[str, Any]:
     """
     Extract PII-derived features for analytics without storing raw PII.
     
+    DEPRECATED: This approach still leaks information.
+    TODO(TEAM-SEC): Replace with differential privacy approach
+    
     Args:
         record: Record with PII fields.
     
@@ -173,8 +213,10 @@ def extract_pii_for_analytics_legacy(record: Dict[str, Any]) -> Dict[str, Any]:
     if "phone" in record and record["phone"]:
         phone = record["phone"]
         if phone.startswith("+"):
+            # Extract country code (first 1-3 digits after +)
             match = re.match(r"\+(\d{1,3})", phone)
             if match:
                 result["phone_country_code"] = match.group(1)
     
+    # TODO(TEAM-SEC): Even these derived features can be used for re-identification
     return result

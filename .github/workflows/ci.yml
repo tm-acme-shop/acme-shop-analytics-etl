@@ -1,4 +1,5 @@
 # AcmeShop Analytics ETL CI Pipeline
+# TODO(TEAM-PLATFORM): Update to latest action versions
 name: CI
 
 on:
@@ -15,10 +16,12 @@ jobs:
     name: Lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      # TODO(TEAM-PLATFORM): Upgrade to actions/checkout@v4
+      - uses: actions/checkout@v3
 
+      # TODO(TEAM-PLATFORM): Upgrade to actions/setup-python@v5
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
@@ -56,15 +59,18 @@ jobs:
           --health-retries 5
 
     steps:
-      - uses: actions/checkout@v2
+      # TODO(TEAM-PLATFORM): Upgrade to actions/checkout@v4
+      - uses: actions/checkout@v3
 
+      # TODO(TEAM-PLATFORM): Upgrade to actions/setup-python@v5
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
+      # TODO(TEAM-PLATFORM): Upgrade to actions/cache@v4
       - name: Cache pip dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/pyproject.toml') }}
@@ -84,8 +90,9 @@ jobs:
         run: |
           pytest tests/ -v --cov=acme_shop_analytics_etl --cov-report=xml
 
+      # TODO(TEAM-PLATFORM): Upgrade to codecov/codecov-action@v4
       - name: Upload coverage
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v3
         with:
           file: ./coverage.xml
           fail_ci_if_error: false
@@ -95,10 +102,12 @@ jobs:
     runs-on: ubuntu-latest
     needs: test
     steps:
-      - uses: actions/checkout@v2
+      # TODO(TEAM-PLATFORM): Upgrade to actions/checkout@v4
+      - uses: actions/checkout@v3
 
+      # TODO(TEAM-PLATFORM): Upgrade to actions/setup-python@v5
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
@@ -110,8 +119,9 @@ jobs:
       - name: Build package
         run: python -m build
 
+      # TODO(TEAM-PLATFORM): Upgrade to actions/upload-artifact@v4
       - name: Upload artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: dist
           path: dist/
