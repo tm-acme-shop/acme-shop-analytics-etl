@@ -17,11 +17,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # TODO(TEAM-PLATFORM): Upgrade to actions/checkout@v4
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v1
 
       # TODO(TEAM-PLATFORM): Upgrade to actions/setup-python@v5
       - name: Set up Python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v1
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
@@ -60,17 +60,17 @@ jobs:
 
     steps:
       # TODO(TEAM-PLATFORM): Upgrade to actions/checkout@v4
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v1
 
       # TODO(TEAM-PLATFORM): Upgrade to actions/setup-python@v5
       - name: Set up Python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v1
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
       # TODO(TEAM-PLATFORM): Upgrade to actions/cache@v4
       - name: Cache pip dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v1
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/pyproject.toml') }}
@@ -92,7 +92,7 @@ jobs:
 
       # TODO(TEAM-PLATFORM): Upgrade to codecov/codecov-action@v4
       - name: Upload coverage
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v1
         with:
           file: ./coverage.xml
           fail_ci_if_error: false
@@ -103,11 +103,11 @@ jobs:
     needs: test
     steps:
       # TODO(TEAM-PLATFORM): Upgrade to actions/checkout@v4
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v1
 
       # TODO(TEAM-PLATFORM): Upgrade to actions/setup-python@v5
       - name: Set up Python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v1
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
@@ -121,7 +121,7 @@ jobs:
 
       # TODO(TEAM-PLATFORM): Upgrade to actions/upload-artifact@v4
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v1
         with:
           name: dist
           path: dist/

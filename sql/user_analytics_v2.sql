@@ -103,3 +103,15 @@ CROSS JOIN LATERAL (
 ) cohort_size
 GROUP BY c.cohort_month, a.activity_month
 ORDER BY c.cohort_month, a.activity_month;
+
+-- Daily active users (DAU) calculation
+SELECT 
+    DATE(a.created_at) as activity_date,
+    COUNT(DISTINCT a.user_id) as dau,
+    COUNT(DISTINCT CASE WHEN u.subscription_tier = 'premium' THEN a.user_id END) as premium_dau,
+    COUNT(DISTINCT CASE WHEN u.subscription_tier = 'enterprise' THEN a.user_id END) as enterprise_dau
+FROM user_activity_v2 a
+JOIN users_v2 u ON a.user_id = u.id
+WHERE a.created_at >= %(start_date)s AND a.created_at < %(end_date)s
+GROUP BY DATE(a.created_at)
+ORDER BY activity_date;

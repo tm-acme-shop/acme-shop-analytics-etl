@@ -2,22 +2,20 @@
 PII Handling module for AcmeShop Analytics ETL.
 
 Provides utilities for handling Personally Identifiable Information (PII)
-including masking and redaction.
+including tokenization, redaction, and masking.
 """
-from acme_shop_analytics_etl.pii.legacy_pii import (
-    mask_email_legacy,
-    mask_phone_legacy,
-    mask_card_number_legacy,
-    hash_pii_md5,
-    anonymize_user_record_legacy,
-    redact_pii_fields_legacy,
+from acme_shop_analytics_etl.pii.handlers import (
+    tokenize_email,
+    tokenize_phone,
+    tokenize_payment_info,
+    redact_pii,
+    PIITokenizer,
 )
 
 __all__ = [
-    "mask_email_legacy",
-    "mask_phone_legacy",
-    "mask_card_number_legacy",
-    "hash_pii_md5",
-    "anonymize_user_record_legacy",
-    "redact_pii_fields_legacy",
+    "tokenize_email",
+    "tokenize_phone",
+    "tokenize_payment_info",
+    "redact_pii",
+    "PIITokenizer",
 ]
