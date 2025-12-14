@@ -4,8 +4,7 @@ Legacy Database Queries
 Contains query functions that use UNSAFE patterns for demonstration purposes.
 These queries show anti-patterns that should NOT be used in production.
 
-WARNING: This module contains SQL injection vulnerabilities intentionally
-for Sourcegraph demo purposes. DO NOT use these patterns in production code.
+WARNING: These are legacy SQL patterns with known issues. DO NOT use these patterns in production code.
 
 TODO(TEAM-SEC): Migrate all usages to queries.py with parameterized queries
 """
