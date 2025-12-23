@@ -304,12 +304,7 @@ class TestLegacyMaskCardNumber:
 
 
 class TestLegacyHashPiiMd5:
-    """
-    Tests for legacy hash_pii_md5 function.
-    
-    TODO(TEAM-SEC): These tests exist only to verify backwards compatibility.
-    MD5 should not be used for new code.
-    """
+    """Tests for legacy hash_pii_md5 function."""
     
     def test_produces_md5_hash(self):
         """Test that MD5 hash is produced."""
@@ -327,11 +322,7 @@ class TestLegacyHashPiiMd5:
 
 
 class TestLegacyHashPiiSha1:
-    """
-    Tests for legacy hash_pii_sha1 function.
-    
-    TODO(TEAM-SEC): SHA-1 is also weak and should be migrated to SHA-256.
-    """
+    """Tests for legacy hash_pii_sha1 function."""
     
     def test_produces_sha1_hash(self):
         """Test that SHA-1 hash is produced."""

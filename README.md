@@ -136,7 +136,7 @@ Feature flags control which pipeline runs. See `src/acme_shop_analytics_etl/conf
 
 ### Security Notes
 
-> ⚠️ **TODO(TEAM-SEC)**: Several legacy patterns exist for migration purposes:
+> ⚠️ **Security Note**: Several legacy patterns exist for migration purposes:
 > - MD5 hashing for deduplication (should migrate to SHA-256)
 > - Raw SQL string interpolation (should use parameterized queries)
 > - Direct PII storage in v1 models (should use tokenization)

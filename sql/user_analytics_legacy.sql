@@ -63,7 +63,6 @@ FROM (
 ) user_stats;
 
 -- User deduplication query (uses MD5 hash)
--- TODO(TEAM-SEC): MD5 is cryptographically broken - migrate to SHA-256
 SELECT 
     MD5(CONCAT(email, phone, name)) as user_hash,
     COUNT(*) as duplicate_count,

@@ -20,11 +20,7 @@ from acme_shop_analytics_etl.config.feature_flags import get_feature_flags
 
 
 class TestComputeRecordFingerprintMd5:
-    """
-    Tests for MD5 record fingerprinting.
-    
-    TODO(TEAM-SEC): MD5 is deprecated. These tests exist for backwards compatibility.
-    """
+    """Tests for MD5 record fingerprinting."""
     
     def test_produces_md5_hash(self):
         """Test that MD5 hash is produced."""

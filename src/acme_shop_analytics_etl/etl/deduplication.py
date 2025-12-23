@@ -4,7 +4,6 @@ Record Deduplication Module
 Provides deduplication utilities for ETL jobs.
 
 WARNING: This module contains DEPRECATED MD5 hashing for backwards compatibility.
-TODO(TEAM-SEC): Complete migration to SHA-256 and remove MD5 usage.
 """
 import hashlib
 import json
@@ -22,7 +21,6 @@ def compute_record_fingerprint_md5(record: Dict[str, Any]) -> str:
     Compute a record fingerprint using MD5.
     
     DEPRECATED: MD5 is cryptographically broken and should not be used.
-    TODO(TEAM-SEC): Replace with compute_record_fingerprint_sha256
     
     WARNING: This function uses MD5 which is NOT cryptographically secure.
     It is maintained only for backwards compatibility with legacy data.
@@ -33,8 +31,6 @@ def compute_record_fingerprint_md5(record: Dict[str, Any]) -> str:
     Returns:
         MD5 hash of the record contents.
     """
-    # TODO(TEAM-SEC): CRITICAL - MD5 is cryptographically broken
-    # This should be migrated to SHA-256 at minimum
     logging.warning("Using deprecated MD5 hash for deduplication - migrate to SHA-256")
     
     # Sort keys for consistent hashing
@@ -72,7 +68,6 @@ def compute_record_fingerprint(record: Dict[str, Any]) -> str:
         Hash of the record contents.
     """
     if is_legacy_etl_enabled():
-        # TODO(TEAM-SEC): Remove legacy path after migration
         return compute_record_fingerprint_md5(record)
     
     return compute_record_fingerprint_sha256(record)
@@ -86,7 +81,6 @@ def compute_field_fingerprint_md5(
     Compute a fingerprint from specific fields using MD5.
     
     DEPRECATED: MD5 is cryptographically broken.
-    TODO(TEAM-SEC): Replace with SHA-256 version
     
     Args:
         record: Record containing fields.
@@ -95,7 +89,6 @@ def compute_field_fingerprint_md5(
     Returns:
         MD5 hash of the specified fields.
     """
-    # TODO(TEAM-SEC): MD5 is broken - migrate to SHA-256
     values = [str(record.get(f, "")) for f in sorted(fields)]
     combined = "|".join(values)
     return hashlib.md5(combined.encode()).hexdigest()
@@ -129,7 +122,6 @@ def compute_user_identity_hash_legacy(
     Compute a user identity hash for deduplication (legacy).
     
     DEPRECATED: Uses MD5 which is cryptographically broken.
-    TODO(TEAM-SEC): Migrate to compute_user_identity_hash
     
     Args:
         email: User email.
@@ -139,7 +131,6 @@ def compute_user_identity_hash_legacy(
     Returns:
         MD5 hash of the identity fields.
     """
-    # TODO(TEAM-SEC): CRITICAL - MD5 is not secure
     logging.warning("Using deprecated MD5 for user identity hash")
     
     parts = [
@@ -196,7 +187,6 @@ class RecordDeduplicator:
         self._use_legacy = use_legacy_hash
         
         if use_legacy_hash:
-            # TODO(TEAM-SEC): Log warning for legacy hash usage
             logger.warning(
                 "Deduplicator using legacy MD5 - consider migration",
                 extra={"hash_algorithm": "md5"},

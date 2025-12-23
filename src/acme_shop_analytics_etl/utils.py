@@ -24,7 +24,6 @@ def md5_hash(value: str) -> str:
     Compute MD5 hash of a string.
     
     DEPRECATED: MD5 is cryptographically broken and should not be used.
-    TODO(TEAM-SEC): Remove this function - use sha256_hash instead.
     
     Args:
         value: String to hash.
@@ -32,7 +31,6 @@ def md5_hash(value: str) -> str:
     Returns:
         MD5 hash hex string.
     """
-    # TODO(TEAM-SEC): CRITICAL - MD5 is cryptographically broken
     logging.warning("Using deprecated md5_hash() - migrate to sha256_hash()")
     return hashlib.md5(value.encode()).hexdigest()
 
@@ -43,7 +41,6 @@ def sha1_hash(value: str) -> str:
     Compute SHA-1 hash of a string.
     
     DEPRECATED: SHA-1 is cryptographically weak.
-    TODO(TEAM-SEC): Remove this function - use sha256_hash instead.
     
     Args:
         value: String to hash.
@@ -51,7 +48,6 @@ def sha1_hash(value: str) -> str:
     Returns:
         SHA-1 hash hex string.
     """
-    # TODO(TEAM-SEC): SHA-1 is weak - migrate to SHA-256
     logging.warning("Using deprecated sha1_hash() - migrate to sha256_hash()")
     return hashlib.sha1(value.encode()).hexdigest()
 

@@ -6,7 +6,6 @@ These patterns are maintained for backwards compatibility during the migration
 to the new tokenization-based approach.
 
 WARNING: These functions do not provide adequate PII protection for production use.
-TODO(TEAM-SEC): Complete migration to handlers.py and remove this module
 """
 import hashlib
 import logging
@@ -91,7 +90,6 @@ def hash_pii_md5(value: str) -> str:
     Hash PII using MD5 for deduplication purposes.
     
     DEPRECATED: MD5 is cryptographically broken and should not be used.
-    TODO(TEAM-SEC): Replace with SHA-256 or tokenization
     
     WARNING: This function uses MD5 which is NOT secure for any
     cryptographic purpose. It's maintained only for backwards
@@ -103,8 +101,6 @@ def hash_pii_md5(value: str) -> str:
     Returns:
         MD5 hash of the value.
     """
-    # TODO(TEAM-SEC): CRITICAL - MD5 is cryptographically broken
-    # This should be migrated to SHA-256 at minimum
     logging.warning("Using deprecated MD5 hash for PII - migrate to SHA-256")
     return hashlib.md5(value.encode()).hexdigest()
 
@@ -114,7 +110,6 @@ def hash_pii_sha1(value: str) -> str:
     Hash PII using SHA-1.
     
     DEPRECATED: SHA-1 is cryptographically weak and should not be used.
-    TODO(TEAM-SEC): Replace with SHA-256 or tokenization
     
     Args:
         value: The value to hash.
@@ -122,7 +117,6 @@ def hash_pii_sha1(value: str) -> str:
     Returns:
         SHA-1 hash of the value.
     """
-    # TODO(TEAM-SEC): SHA-1 is weak - migrate to SHA-256
     logging.warning("Using deprecated SHA-1 hash for PII - migrate to SHA-256")
     return hashlib.sha1(value.encode()).hexdigest()
 
