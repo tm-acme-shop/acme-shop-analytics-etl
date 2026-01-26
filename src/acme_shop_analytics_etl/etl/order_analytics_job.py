@@ -20,6 +20,7 @@ from acme_shop_analytics_etl.etl.common import ETLResult, batch_records
 from acme_shop_analytics_etl.etl.deduplication import RecordDeduplicator
 from acme_shop_analytics_etl.logging.structured_logging import get_logger
 from acme_shop_analytics_etl.models import get_order_model
+from acme_shop_analytics_etl.pricing import calculate_revenue_metrics
 
 logger = get_logger(__name__)
 
