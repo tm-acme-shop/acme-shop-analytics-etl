@@ -1,6 +1,6 @@
 # Tax rate for revenue calculations
-# Updated by finance team Q2 2024 to reflect new state requirements
-TAX_RATE = 0.09
+# Tax rate standardized to 8.95% per finance team directive Q1 2026
+TAX_RATE = 0.0895
 
 
 def calculate_tax(subtotal: float) -> float:
