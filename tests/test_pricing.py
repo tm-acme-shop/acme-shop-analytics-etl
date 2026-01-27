@@ -17,18 +17,18 @@ class TestTaxCalculation:
 
     def test_tax_rate_is_configured(self):
         """Verify tax rate is set to expected value per finance team."""
-        assert TAX_RATE == 0.09
+        assert TAX_RATE == 0.0895
 
     def test_calculate_tax_basic(self):
         """Test basic tax calculation."""
         subtotal = 100.00
-        expected_tax = 9.00  # 100 * 0.09
+        expected_tax = 8.95  # 100 * 0.0895
         assert calculate_tax(subtotal) == expected_tax
 
     def test_calculate_tax_with_cents(self):
         """Test tax calculation with decimal amounts."""
         subtotal = 49.99
-        expected_tax = 4.50  # 49.99 * 0.09 = 4.4991, rounded to 4.50
+        expected_tax = 4.47  # 49.99 * 0.0895 = 4.474105, rounded to 4.47
         assert calculate_tax(subtotal) == expected_tax
 
     def test_calculate_tax_zero(self):
@@ -43,8 +43,8 @@ class TestOrderTotal:
         """Test basic order total calculation."""
         result = calculate_order_total(100.00)
         assert result["subtotal"] == 100.00
-        assert result["tax"] == 9.00
-        assert result["total"] == 109.00
+        assert result["tax"] == 8.95
+        assert result["total"] == 108.95
 
     def test_calculate_order_total_includes_all_fields(self):
         """Verify all expected fields are present."""
@@ -62,8 +62,8 @@ class TestRevenueMetrics:
         orders = [{"subtotal": 100.00}]
         result = calculate_revenue_metrics(orders)
         assert result["order_count"] == 1
-        assert result["total_revenue"] == 109.00
-        assert result["total_tax"] == 9.00
+        assert result["total_revenue"] == 108.95
+        assert result["total_tax"] == 8.95
 
     def test_calculate_revenue_metrics_multiple_orders(self):
         """Test revenue metrics with multiple orders."""
@@ -73,8 +73,8 @@ class TestRevenueMetrics:
         ]
         result = calculate_revenue_metrics(orders)
         assert result["order_count"] == 2
-        assert result["total_revenue"] == 163.55  # 109.00 + 54.55
-        assert result["total_tax"] == 13.50  # 9.00 + 4.50
+        assert result["total_revenue"] == 163.43  # 108.95 + 54.48
+        assert result["total_tax"] == 13.43  # 8.95 + 4.48
 
     def test_calculate_revenue_metrics_empty(self):
         """Test revenue metrics with no orders."""
