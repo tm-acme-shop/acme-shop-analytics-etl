@@ -37,7 +37,7 @@ class FeatureFlags:
     # TODO(TEAM-API): Disable after schema migration complete
     enable_v1_schema: bool = field(
         default_factory=lambda: _parse_bool(
-            os.getenv("ENABLE_V1_SCHEMA", "true")
+            os.getenv("ENABLE_V1_SCHEMA", "false")
         )
     )
     

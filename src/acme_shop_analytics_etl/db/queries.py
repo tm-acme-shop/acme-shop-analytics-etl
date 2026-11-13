@@ -4,10 +4,9 @@ Database Queries (V2)
 Contains properly parameterized query functions for safe database access.
 This is the recommended approach for all database operations.
 """
-import os
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional
 
 from acme_shop_analytics_etl.db.connection import cursor, source_cursor
 from acme_shop_analytics_etl.logging.structured_logging import get_logger
@@ -75,7 +74,6 @@ def execute_parameterized_query(
 def fetch_user_analytics(
     start_date: datetime,
     end_date: datetime,
-    use_v2_schema: bool = True,
 ) -> List[Dict[str, Any]]:
     """
     Fetch user analytics data using parameterized queries.
@@ -83,16 +81,10 @@ def fetch_user_analytics(
     Args:
         start_date: Start of the date range.
         end_date: End of the date range.
-        use_v2_schema: Whether to use v2 schema queries.
     
     Returns:
         List of user analytics records.
     """
-    if use_v2_schema:
-        sql_file = "user_analytics_v2.sql"
-    else:
-        sql_file = "user_analytics_legacy.sql"
-    
     # For now, use inline query with proper parameterization
     query = """
         SELECT 
@@ -111,7 +103,7 @@ def fetch_user_analytics(
         extra={
             "start_date": start_date.isoformat(),
             "end_date": end_date.isoformat(),
-            "schema": "v2" if use_v2_schema else "v1",
+            "schema": "v2",
         },
     )
     

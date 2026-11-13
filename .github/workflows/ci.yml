@@ -86,7 +86,7 @@ jobs:
         env:
           DATABASE_URL: postgresql://test:test@localhost:5432/test_analytics
           ENABLE_LEGACY_ETL: "true"
-          ENABLE_V1_SCHEMA: "true"
+          ENABLE_V1_SCHEMA: "false"
         run: |
           pytest tests/ -v --cov=acme_shop_analytics_etl --cov-report=xml
 
