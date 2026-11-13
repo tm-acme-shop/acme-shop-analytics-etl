@@ -84,7 +84,7 @@ cp .env.example .env
 | Flag | Description | Default |
 |------|-------------|---------|
 | `ENABLE_LEGACY_ETL` | Enable legacy ETL pipelines | `true` |
-| `ENABLE_V1_SCHEMA` | Use v1 data models | `true` |
+| `ENABLE_V1_SCHEMA` | Use v1 data models (non-user jobs only) | `false` |
 
 ## Running ETL Jobs
 

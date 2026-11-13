@@ -10,10 +10,7 @@ from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.operators.python import PythonOperator
 
-from acme_shop_analytics_etl.config.feature_flags import (
-    is_legacy_etl_enabled,
-    is_v1_schema_enabled,
-)
+from acme_shop_analytics_etl.config.feature_flags import is_legacy_etl_enabled
 from acme_shop_analytics_etl.etl.user_analytics_job import (
     extract_user_data,
     transform_user_metrics,
@@ -68,11 +65,7 @@ def run_transform(**context):
     
     logging.info(f"Transforming {len(raw_data) if raw_data else 0} user records")
     
-    use_v1 = is_v1_schema_enabled()
-    # TODO(TEAM-PLATFORM): Remove v1 schema support after migration
-    logging.info(f"Using {'v1' if use_v1 else 'v2'} schema for transformation")
-    
-    return transform_user_metrics(raw_data, use_legacy_schema=use_v1)
+    return transform_user_metrics(raw_data)
 
 
 def run_load(**context):

@@ -59,7 +59,7 @@ class TestFeatureFlags:
         flags = FeatureFlags()
         
         assert flags.enable_legacy_etl is True
-        assert flags.enable_v1_schema is True
+        assert flags.enable_v1_schema is False
         assert flags.enable_legacy_payments is False
         assert flags.enable_legacy_pii is True
         assert flags.enable_experimental_dedup is False
@@ -67,7 +67,7 @@ class TestFeatureFlags:
     def test_env_var_override(self, monkeypatch):
         """Test that environment variables override defaults."""
         monkeypatch.setenv("ENABLE_LEGACY_ETL", "false")
-        monkeypatch.setenv("ENABLE_V1_SCHEMA", "false")
+        monkeypatch.setenv("ENABLE_V1_SCHEMA", "true")
         monkeypatch.setenv("ENABLE_LEGACY_PAYMENTS", "true")
         monkeypatch.setenv("ENABLE_LEGACY_PII", "false")
         monkeypatch.setenv("ENABLE_EXPERIMENTAL_DEDUP", "true")
@@ -75,7 +75,7 @@ class TestFeatureFlags:
         flags = FeatureFlags()
         
         assert flags.enable_legacy_etl is False
-        assert flags.enable_v1_schema is False
+        assert flags.enable_v1_schema is True
         assert flags.enable_legacy_payments is True
         assert flags.enable_legacy_pii is False
         assert flags.enable_experimental_dedup is True

@@ -5,20 +5,15 @@ Processes user data for analytics including registration metrics,
 activity patterns, and churn analysis.
 """
 import logging
-import time
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
-from acme_shop_analytics_etl.config.feature_flags import (
-    is_legacy_etl_enabled,
-    is_v1_schema_enabled,
-)
+from acme_shop_analytics_etl.config.feature_flags import is_legacy_etl_enabled
 from acme_shop_analytics_etl.db.queries import fetch_user_analytics, insert_analytics_batch
 from acme_shop_analytics_etl.db.legacy_queries import get_users_by_date_range_legacy
 from acme_shop_analytics_etl.etl.common import ETLResult, batch_records
 from acme_shop_analytics_etl.etl.deduplication import RecordDeduplicator
 from acme_shop_analytics_etl.logging.structured_logging import get_logger
-from acme_shop_analytics_etl.models import get_user_model
 
 logger = get_logger(__name__)
 
@@ -48,7 +43,6 @@ def extract_user_data(
     return fetch_user_analytics(
         start_date=start_date,
         end_date=end_date,
-        use_v2_schema=not is_v1_schema_enabled(),
     )
 
 
@@ -77,14 +71,12 @@ def run_legacy_user_etl(execution_date: datetime) -> List[Dict[str, Any]]:
 
 def transform_user_metrics(
     raw_data: List[Dict[str, Any]],
-    use_legacy_schema: bool = False,
 ) -> List[Dict[str, Any]]:
     """
     Transform raw user data into analytics metrics.
     
     Args:
         raw_data: List of raw user records.
-        use_legacy_schema: If True, use v1 transformations.
     
     Returns:
         List of transformed metric records.
@@ -97,7 +89,7 @@ def transform_user_metrics(
         "Transforming user metrics",
         extra={
             "record_count": len(raw_data),
-            "schema": "v1" if use_legacy_schema else "v2",
+            "schema": "v2",
         },
     )
     
@@ -106,15 +98,10 @@ def transform_user_metrics(
     unique_records = deduplicator.deduplicate_batch(raw_data)
     
     metrics = []
-    UserModel = get_user_model()
     
     for record in unique_records:
         try:
-            # Transform based on schema version
-            if use_legacy_schema:
-                metric = _transform_user_v1(record)
-            else:
-                metric = _transform_user_v2(record)
+            metric = _transform_user_v2(record)
             
             if metric:
                 metrics.append(metric)
@@ -138,24 +125,6 @@ def transform_user_metrics(
     )
     
     return metrics
-
-
-def _transform_user_v1(record: Dict[str, Any]) -> Optional[Dict[str, Any]]:
-    """
-    Transform user record using v1 schema.
-    
-    DEPRECATED: V1 schema has issues with PII handling.
-    TODO(TEAM-SEC): Remove after v2 migration
-    """
-    # TODO(TEAM-API): V1 transformation doesn't properly handle PII
-    return {
-        "user_id": record.get("id"),
-        "registration_date": record.get("created_at"),
-        "status": record.get("status"),
-        "subscription_type": record.get("subscription_type"),
-        "email_verified": bool(record.get("email_verified")),
-        "days_since_last_login": _calculate_days_since(record.get("last_login_at")),
-    }
 
 
 def _transform_user_v2(record: Dict[str, Any]) -> Optional[Dict[str, Any]]:
@@ -261,10 +230,7 @@ def run_user_analytics_etl(
         result.records_extracted = len(raw_data)
         
         # Transform
-        metrics = transform_user_metrics(
-            raw_data,
-            use_legacy_schema=is_v1_schema_enabled(),
-        )
+        metrics = transform_user_metrics(raw_data)
         result.records_transformed = len(metrics)
         
         # Load
